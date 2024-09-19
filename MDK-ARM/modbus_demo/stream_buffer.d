@@ -1,0 +1,14 @@
+modbus_demo\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c
+modbus_demo\stream_buffer.o: C:\Users\ff\AppData\Local\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+modbus_demo\stream_buffer.o: C:\Users\ff\AppData\Local\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+modbus_demo\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+modbus_demo\stream_buffer.o: C:\Users\ff\AppData\Local\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+modbus_demo\stream_buffer.o: ../Core/Inc/FreeRTOSConfig.h
+modbus_demo\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+modbus_demo\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+modbus_demo\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+modbus_demo\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+modbus_demo\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+modbus_demo\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+modbus_demo\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+modbus_demo\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/stream_buffer.h
