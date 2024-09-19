@@ -168,7 +168,22 @@ void DebugMon_Handler(void)
 void USART1_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
-
+if (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_RXNE))
+  {
+    huart1.RxCpltCallback(&huart1);
+    __HAL_UART_CLEAR_FLAG(&huart1, UART_FLAG_RXNE);
+  }
+  if (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_ORE))
+  {
+    //读取一次DR来清除ORE标志
+    uint16_t pucByte = (uint16_t)((&huart1)->Instance->DR & (uint16_t)0x01FF);
+    __HAL_UART_CLEAR_OREFLAG(&huart1);
+  }
+  if (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_TC))
+  {
+    huart1.TxCpltCallback(&huart1);
+    __HAL_UART_CLEAR_FLAG(&huart1, UART_FLAG_TC);
+  }
   /* USER CODE END USART1_IRQn 0 */
   /* USER CODE BEGIN USART1_IRQn 1 */
 
@@ -181,7 +196,22 @@ void USART1_IRQHandler(void)
 void USART2_IRQHandler(void)
 {
   /* USER CODE BEGIN USART2_IRQn 0 */
-
+  if (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_RXNE))
+  {
+    huart2.RxCpltCallback(&huart2);
+    __HAL_UART_CLEAR_FLAG(&huart2, UART_FLAG_RXNE);
+  }
+  if (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_ORE))
+  {
+    //读取一次DR来清除ORE标志
+    uint16_t pucByte = (uint16_t)((&huart2)->Instance->DR & (uint16_t)0x01FF);
+    __HAL_UART_CLEAR_OREFLAG(&huart2);
+  }
+  if (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_TC))
+  {
+      huart2.TxCpltCallback(&huart2);
+    __HAL_UART_CLEAR_FLAG(&huart2, UART_FLAG_TC);
+  }
   /* USER CODE END USART2_IRQn 0 */
   /* USER CODE BEGIN USART2_IRQn 1 */
 
@@ -194,7 +224,22 @@ void USART2_IRQHandler(void)
 void USART3_IRQHandler(void)
 {
   /* USER CODE BEGIN USART3_IRQn 0 */
-
+  if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_RXNE))
+  {
+    huart3.RxCpltCallback(&huart3);
+    __HAL_UART_CLEAR_FLAG(&huart3, UART_FLAG_RXNE);
+  }
+  if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_ORE))
+  {
+    //读取一次DR来清除ORE标志
+    uint16_t pucByte = (uint16_t)((&huart3)->Instance->DR & (uint16_t)0x01FF);
+    __HAL_UART_CLEAR_OREFLAG(&huart3);
+  }
+  if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_TC))
+  {
+    huart3.TxCpltCallback(&huart3);
+    __HAL_UART_CLEAR_FLAG(&huart3, UART_FLAG_TC);
+  }
   /* USER CODE END USART3_IRQn 0 */
   /* USER CODE BEGIN USART3_IRQn 1 */
 

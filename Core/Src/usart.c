@@ -21,6 +21,36 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
+#include "stdio.h"
+
+#ifdef __GNUC__
+/* With GCC, small printf (option LD Linker->Libraries->Small printf
+   set to 'Yes') calls __io_putchar() */
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#else
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#endif /* __GNUC__ */
+
+#ifdef __GNUC__
+#define GETCHAR_PROTOTYPE int __io_getchar(void)
+#else
+#define GETCHAR_PROTOTYPE int fgetc(FILE *f)
+#endif /* __GNUC__ */
+
+PUTCHAR_PROTOTYPE
+{
+	while(__HAL_UART_GET_FLAG(&huart1, UART_FLAG_TC) == RESET){}
+  USART1->DR = ch;
+	return ch;
+}
+
+GETCHAR_PROTOTYPE
+{
+  uint8_t ch = 0;
+	while(__HAL_UART_GET_FLAG(&huart1, UART_FLAG_RXNE) == RESET){}
+	ch= USART1->DR;
+	return ch;
+}
 
 /* USER CODE END 0 */
 

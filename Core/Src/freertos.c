@@ -25,6 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "user_mb_app.h"
 
 /* USER CODE END Includes */
 
@@ -47,24 +48,24 @@
 /* USER CODE BEGIN Variables */
 
 /* USER CODE END Variables */
-/* Definitions for masterTask */
-osThreadId_t masterTaskHandle;
-const osThreadAttr_t masterTask_attributes = {
-  .name = "masterTask",
+/* Definitions for MasterTask */
+osThreadId_t MasterTaskHandle;
+const osThreadAttr_t MasterTask_attributes = {
+  .name = "MasterTask",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
-/* Definitions for slaveTask */
-osThreadId_t slaveTaskHandle;
-const osThreadAttr_t slaveTask_attributes = {
-  .name = "slaveTask",
+/* Definitions for Slave_Task */
+osThreadId_t Slave_TaskHandle;
+const osThreadAttr_t Slave_Task_attributes = {
+  .name = "Slave_Task",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityLow,
+  .priority = (osPriority_t) osPriorityNormal,
 };
-/* Definitions for masterSend */
-osThreadId_t masterSendHandle;
-const osThreadAttr_t masterSend_attributes = {
-  .name = "masterSend",
+/* Definitions for MasterSendTask */
+osThreadId_t MasterSendTaskHandle;
+const osThreadAttr_t MasterSendTask_attributes = {
+  .name = "MasterSendTask",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
@@ -74,9 +75,9 @@ const osThreadAttr_t masterSend_attributes = {
 
 /* USER CODE END FunctionPrototypes */
 
-void masterTaskfun(void *argument);
-void slaveTaskfun(void *argument);
-void masterSend_fun(void *argument);
+void MasterTaskFun(void *argument);
+void Slave_TaskFun(void *argument);
+void MasterSendTaskFun(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -87,7 +88,10 @@ void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
   */
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
-
+  eMBInit(MB_RTU, 0x01, 3, 9600, MB_PAR_NONE);
+  eMBEnable();
+  eMBMasterInit(MB_RTU, 2, 9600, MB_PAR_NONE);
+  eMBMasterEnable();
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -107,14 +111,14 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* creation of masterTask */
-  masterTaskHandle = osThreadNew(masterTaskfun, NULL, &masterTask_attributes);
+  /* creation of MasterTask */
+  MasterTaskHandle = osThreadNew(MasterTaskFun, NULL, &MasterTask_attributes);
 
-  /* creation of slaveTask */
-  slaveTaskHandle = osThreadNew(slaveTaskfun, NULL, &slaveTask_attributes);
+  /* creation of Slave_Task */
+  Slave_TaskHandle = osThreadNew(Slave_TaskFun, NULL, &Slave_Task_attributes);
 
-  /* creation of masterSend */
-  masterSendHandle = osThreadNew(masterSend_fun, NULL, &masterSend_attributes);
+  /* creation of MasterSendTask */
+  MasterSendTaskHandle = osThreadNew(MasterSendTaskFun, NULL, &MasterSendTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -126,58 +130,65 @@ void MX_FREERTOS_Init(void) {
 
 }
 
-/* USER CODE BEGIN Header_masterTaskfun */
+/* USER CODE BEGIN Header_MasterTaskFun */
 /**
-  * @brief  Function implementing the masterTask thread.
+  * @brief  Function implementing the MasterTask thread.
   * @param  argument: Not used
   * @retval None
   */
-/* USER CODE END Header_masterTaskfun */
-void masterTaskfun(void *argument)
+/* USER CODE END Header_MasterTaskFun */
+void MasterTaskFun(void *argument)
 {
-  /* USER CODE BEGIN masterTaskfun */
+  /* USER CODE BEGIN MasterTaskFun */
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+   eMBMasterPoll();
   }
-  /* USER CODE END masterTaskfun */
+  /* USER CODE END MasterTaskFun */
 }
 
-/* USER CODE BEGIN Header_slaveTaskfun */
+/* USER CODE BEGIN Header_Slave_TaskFun */
 /**
-* @brief Function implementing the slaveTask thread.
+* @brief Function implementing the Slave_Task thread.
 * @param argument: Not used
 * @retval None
 */
-/* USER CODE END Header_slaveTaskfun */
-void slaveTaskfun(void *argument)
+/* USER CODE END Header_Slave_TaskFun */
+__weak void Slave_TaskFun(void *argument)
 {
-  /* USER CODE BEGIN slaveTaskfun */
+  /* USER CODE BEGIN Slave_TaskFun */
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    eMBPoll();
   }
-  /* USER CODE END slaveTaskfun */
+  /* USER CODE END Slave_TaskFun */
 }
 
-/* USER CODE BEGIN Header_masterSend_fun */
+/* USER CODE BEGIN Header_MasterSendTaskFun */
 /**
-* @brief Function implementing the masterSend thread.
+* @brief Function implementing the MasterSendTask thread.
 * @param argument: Not used
 * @retval None
 */
-/* USER CODE END Header_masterSend_fun */
-void masterSend_fun(void *argument)
+/* USER CODE END Header_MasterSendTaskFun */
+void MasterSendTaskFun(void *argument)
 {
-  /* USER CODE BEGIN masterSend_fun */
+  /* USER CODE BEGIN MasterSendTaskFun */
+  uint16_t data[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    eMBMasterReqWriteMultipleHoldingRegister(1, 0, 10, data, 100);
+    for (uint16_t i = 0; i < sizeof(data)/sizeof(data[0]); i++)
+    {
+      data[i] += 1; 
+    }
+    
+    osDelay(1000);
   }
-  /* USER CODE END masterSend_fun */
+  /* USER CODE END MasterSendTaskFun */
 }
 
 /* Private application code --------------------------------------------------*/
